@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Teacher Dashboard — CollegeMS{% endblock %}
+{% block content %}
+  <h1>Teacher Dashboard</h1>
+
+  {% if own_department %}
+    <p class="muted">Department: {{ own_department }}</p>
+  {% endif %}
+
+  <h2>Departments I head</h2>
+  <table class="data-table">
+    <thead><tr><th>Code</th><th>Department</th><th></th></tr></thead>
+    <tbody>
+      {% for department in headed_departments %}
+        <tr>
+          <td>{{ department.code }}</td>
+          <td>{{ department.name }}</td>
+          <td>
+            <a href="{% url 'academics:student_roster' department.id %}">Roster</a>
+            &middot;
+            <a href="{% url 'academics:mark_attendance' department.id %}">Mark attendance</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="3">You're not set as head of department for any department yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="quick-links">
+    <a href="{% url 'academics:department_list' %}" class="button">All departments</a>
+    <a href="{% url 'exams:exam_list' %}" class="button">Exams & marks entry</a>
+  </div>
+{% endblock %}

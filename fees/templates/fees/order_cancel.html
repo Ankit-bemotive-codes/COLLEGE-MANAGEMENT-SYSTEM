@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Payment Not Completed — CollegeMS{% endblock %}
+{% block content %}
+  <div class="form-card center">
+    <h1>Payment not completed</h1>
+    <p>Your payment was cancelled or could not be verified. No amount has been charged unless you see a confirmation from your bank.</p>
+    <p><a href="{% url 'fees:invoice_list' %}" class="button">Back to my fees</a></p>
+  </div>
+{% endblock %}

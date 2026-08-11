@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Create User — CollegeMS{% endblock %}
+{% block content %}
+  <div class="form-card">
+    <h1>Create a login account</h1>
+    <p class="muted">Use this to provision a login for a new teacher or student. After creating the account, remember to also create their Teacher/Student profile in the admin site to link them to a department/subjects.</p>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="button">Create account</button>
+    </form>
+  </div>
+{% endblock %}

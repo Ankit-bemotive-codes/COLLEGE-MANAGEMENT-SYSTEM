@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Pay Fees — CollegeMS{% endblock %}
+{% block content %}
+  <div class="form-card">
+    <h1>Pay Invoice</h1>
+    <p>{{ invoice.fee_structure }}</p>
+    <p class="stat">Amount due: ₹{{ invoice.amount_due }}</p>
+
+    <button id="pay-button" class="button">Pay ₹{{ invoice.amount_due }} with Razorpay</button>
+    <p class="muted" style="margin-top:12px;">You'll be redirected back here automatically once payment completes.</p>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    document.getElementById('pay-button').addEventListener('click', function () {
+      var options = {
+        key: "{{ razorpay_key_id }}",
+        amount: "{{ amount_paise }}",
+        currency: "INR",
+        name: "CollegeMS",
+        description: "{{ invoice.fee_structure }}",
+        order_id: "{{ order_id }}",
+        prefill: {
+          name: "{{ student_name }}",
+          email: "{{ student_email }}"
+        },
+        theme: { color: "#1d291e" },
+        handler: function (response) {
+          // Razorpay confirmed payment client-side — now tell our server,
+          // which re-verifies the signature before trusting anything.
+          var form = document.createElement('form');
+          form.method = 'POST';
+          form.action = "{% url 'fees:payment_success' %}";
+
+          function addField(name, value) {
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = value;
+            form.appendChild(input);
+          }
+
+          addField('csrfmiddlewaretoken', '{{ csrf_token }}');
+          addField('razorpay_payment_id', response.razorpay_payment_id);
+          addField('razorpay_order_id', response.razorpay_order_id);
+          addField('razorpay_signature', response.razorpay_signature);
+
+          document.body.appendChild(form);
+          form.submit();
+        },
+        modal: {
+          ondismiss: function () {
+            window.location.href = "{% url 'fees:payment_failed' %}";
+          }
+        }
+      };
+      var rzp = new Razorpay(options);
+      rzp.open();
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Exams — CollegeMS{% endblock %}
+{% block content %}
+  <h1>Exams</h1>
+  <table class="data-table">
+    <thead>
+      <tr><th>Exam</th><th>Department</th><th>Semester</th><th>Date</th><th>Subjects</th></tr>
+    </thead>
+    <tbody>
+      {% for exam in exams %}
+        <tr>
+          <td>{{ exam.name }}</td>
+          <td>{{ exam.department }}</td>
+          <td>{{ exam.semester }}</td>
+          <td>{{ exam.date }}</td>
+          <td>
+            {% for subject in exam.department.subjects.all %}
+              <a href="{% url 'exams:enter_marks' exam.id subject.id %}">{{ subject.name }}</a>{% if not forloop.last %} &middot; {% endif %}
+            {% empty %}
+              <span class="muted">No subjects configured for this department yet.</span>
+            {% endfor %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5">No exams yet — add some in the Django admin.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Payment Successful — CollegeMS{% endblock %}
+{% block content %}
+  <div class="form-card center">
+    <h1>Payment successful</h1>
+    <p>Your payment of ₹{{ payment.amount }} for {{ invoice.fee_structure }} has been received.</p>
+    <p><a href="{% url 'fees:receipt' payment.id %}" class="button">View receipt</a></p>
+    <p><a href="{% url 'fees:invoice_list' %}">Back to my fees</a></p>
+  </div>
+{% endblock %}

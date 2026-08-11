@@ -1,0 +1,30 @@
+<header class="navbar">
+  <a href="{% url 'dashboard:redirect' %}" class="logo">CollegeMS</a>
+
+  <nav>
+    {% if user.is_authenticated %}
+      {% if user.role == "admin" %}
+        <a href="{% url 'dashboard:admin' %}">Dashboard</a>
+        <a href="{% url 'academics:department_list' %}">Departments</a>
+        <a href="{% url 'exams:exam_list' %}">Exams</a>
+        <a href="{% url 'accounts:create_user' %}">Add User</a>
+      {% elif user.role == "teacher" %}
+        <a href="{% url 'dashboard:teacher' %}">Dashboard</a>
+        <a href="{% url 'academics:department_list' %}">Departments</a>
+        <a href="{% url 'exams:exam_list' %}">Exams</a>
+      {% else %}
+        <a href="{% url 'dashboard:student' %}">Dashboard</a>
+        <a href="{% url 'academics:my_attendance' %}">Attendance</a>
+        <a href="{% url 'exams:report_card' %}">Report Card</a>
+        <a href="{% url 'fees:invoice_list' %}">Fees</a>
+      {% endif %}
+      <span class="nav-user">{{ user.get_full_name|default:user.username }} ({{ user.get_role_display }})</span>
+      <form action="{% url 'accounts:logout' %}" method="post" class="inline-form">
+        {% csrf_token %}
+        <button type="submit" class="link-button">Logout</button>
+      </form>
+    {% else %}
+      <a href="{% url 'accounts:login' %}">Login</a>
+    {% endif %}
+  </nav>
+</header>

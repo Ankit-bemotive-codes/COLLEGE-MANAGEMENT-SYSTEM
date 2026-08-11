@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard — CollegeMS{% endblock %}
+{% block content %}
+  <h1>Admin Dashboard</h1>
+  <div class="stat-grid">
+    <div class="stat-card">
+      <span class="stat-number">{{ total_students }}</span>
+      <span class="stat-label">Students</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">{{ total_departments }}</span>
+      <span class="stat-label">Departments</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">{{ collection_rate }}%</span>
+      <span class="stat-label">Fee collection rate</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">{{ paid_invoices }} / {{ total_invoices }}</span>
+      <span class="stat-label">Invoices paid</span>
+    </div>
+  </div>
+
+  <div class="quick-links">
+    <a href="{% url 'academics:department_list' %}" class="button">Manage departments & attendance</a>
+    <a href="{% url 'exams:exam_list' %}" class="button">Manage exams & marks</a>
+    <a href="{% url 'accounts:create_user' %}" class="button">Create a user account</a>
+    <a href="/admin/" class="button button-outline">Django admin (add departments, fee structures, etc.)</a>
+  </div>
+{% endblock %}

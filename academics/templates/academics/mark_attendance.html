@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Attendance — {{ department }}{% endblock %}
+{% block content %}
+  <h1>Mark Attendance — {{ department }} — {{ today }}</h1>
+  <form method="post">
+    {% csrf_token %}
+    <table class="data-table">
+      <thead>
+        <tr><th>Student</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        {% for student, current_status in rows %}
+          <tr>
+            <td>{{ student.user.get_full_name|default:student.user.username }}</td>
+            <td>
+              <select name="status_{{ student.id }}">
+                {% for value, label in status_choices %}
+                  <option value="{{ value }}" {% if value == current_status %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="2">No students in this department yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button type="submit" class="button">Save attendance</button>
+  </form>
+{% endblock %}

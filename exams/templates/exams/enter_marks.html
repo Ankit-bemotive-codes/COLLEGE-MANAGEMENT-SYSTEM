@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Enter Marks — {{ subject }}{% endblock %}
+{% block content %}
+  <h1>Enter Marks — {{ exam }} — {{ subject }}</h1>
+  <form method="post">
+    {% csrf_token %}
+    <table class="data-table">
+      <thead><tr><th>Student</th><th>Marks obtained (out of 100)</th></tr></thead>
+      <tbody>
+        {% for student, current_marks in rows %}
+          <tr>
+            <td>{{ student.user.get_full_name|default:student.user.username }}</td>
+            <td><input type="text" name="marks_{{ student.id }}" value="{{ current_marks }}" placeholder="e.g. 78" class="marks-input"></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="2">No students in this department yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button type="submit" class="button">Save marks</button>
+  </form>
+{% endblock %}

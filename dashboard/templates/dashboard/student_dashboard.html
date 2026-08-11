@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard — CollegeMS{% endblock %}
+{% block content %}
+  <h1>Welcome, {{ profile.user.get_full_name|default:profile.user.username }}</h1>
+  <div class="stat-grid">
+    <div class="stat-card">
+      <span class="stat-number">{{ attendance_pct }}%</span>
+      <span class="stat-label">Attendance</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">{{ pending_count }}</span>
+      <span class="stat-label">Pending fee invoices</span>
+    </div>
+  </div>
+
+  {% if pending_invoices %}
+    <h2>Pending fees</h2>
+    <table class="data-table">
+      <thead><tr><th>Term</th><th>Amount</th><th></th></tr></thead>
+      <tbody>
+        {% for invoice in pending_invoices %}
+          <tr>
+            <td>{{ invoice.fee_structure.term }}</td>
+            <td>₹{{ invoice.amount_due }}</td>
+            <td><a href="{% url 'fees:pay_invoice' invoice.id %}" class="button button-small">Pay now</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  <div class="quick-links">
+    <a href="{% url 'academics:my_attendance' %}" class="button">Full attendance</a>
+    <a href="{% url 'exams:report_card' %}" class="button">Report card</a>
+    <a href="{% url 'fees:invoice_list' %}" class="button">All fee invoices</a>
+  </div>
+{% endblock %}

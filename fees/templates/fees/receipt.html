@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Receipt — CollegeMS{% endblock %}
+{% block content %}
+  <div class="form-card receipt">
+    <h1>Payment Receipt</h1>
+    <table class="data-table">
+      <tr><th>Invoice</th><td>{{ payment.invoice.invoice_number }}</td></tr>
+      <tr><th>Student</th><td>{{ payment.invoice.student }}</td></tr>
+      <tr><th>Fee</th><td>{{ payment.invoice.fee_structure }}</td></tr>
+      <tr><th>Amount paid</th><td>₹{{ payment.amount }}</td></tr>
+      <tr><th>Payment ID</th><td>{{ payment.razorpay_payment_id }}</td></tr>
+      <tr><th>Date</th><td>{{ payment.updated_at }}</td></tr>
+      <tr><th>Status</th><td>{{ payment.get_status_display }}</td></tr>
+    </table>
+    <p><a href="{% url 'fees:invoice_list' %}">Back to my fees</a></p>
+  </div>
+{% endblock %}
