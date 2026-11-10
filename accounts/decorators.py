@@ -21,6 +21,11 @@ def role_required(*allowed_roles):
         @wraps(view_func)
         @login_required
         def _wrapped(request, *args, **kwargs):
+            if request.user.is_superuser:
+                if "admin" not in allowed_roles:
+                    return redirect("dashboard:redirect")
+                return view_func(request, *args, **kwargs)
+
             if request.user.role not in allowed_roles:
                 messages.error(request, "You don't have permission to view that page.")
                 return redirect("dashboard:redirect")

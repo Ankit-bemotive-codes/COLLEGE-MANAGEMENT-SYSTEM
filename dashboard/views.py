@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 
 from accounts.decorators import role_required
 from accounts.models import User
@@ -12,7 +12,7 @@ from fees.models import FeeInvoice
 def redirect_to_dashboard(request):
     """Single entry point after login — sends each role to its own dashboard."""
     role = request.user.role
-    if role == User.Role.ADMIN:
+    if request.user.is_superuser or role == User.Role.ADMIN:
         return redirect("dashboard:admin")
     if role == User.Role.TEACHER:
         return redirect("dashboard:teacher")
@@ -59,7 +59,10 @@ def teacher_dashboard(request):
 @login_required
 @role_required("student")
 def student_dashboard(request):
-    profile = get_object_or_404(StudentProfile, user=request.user)
+    try:
+        profile = request.user.student_profile
+    except StudentProfile.DoesNotExist:
+        return render(request, "dashboard/student_profile_missing.html", status=200)
 
     records = profile.attendance_records.all()
     total = records.count()

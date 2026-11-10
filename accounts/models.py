@@ -1,5 +1,13 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
+
+
+class CollegeUserManager(UserManager):
+    use_in_migrations = True
+
+    def create_superuser(self, username, email=None, password=None, **extra_fields):
+        extra_fields["role"] = "admin"
+        return super().create_superuser(username, email, password, **extra_fields)
 
 
 class User(AbstractUser):
@@ -19,6 +27,7 @@ class User(AbstractUser):
 
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.STUDENT)
     phone_number = models.CharField(max_length=20, blank=True)
+    objects = CollegeUserManager()
 
     @property
     def is_admin_role(self):
@@ -33,4 +42,9 @@ class User(AbstractUser):
         return self.role == self.Role.STUDENT
 
     def __str__(self):
-        return f"{self.get_full_name() or self.username} ({self.get_role_display()})"
+        display_name = (self.get_full_name() or self.username or "User").strip()
+        if self.role in self.Role.values:
+            role_label = self.Role(self.role).label
+        else:
+            role_label = self.role or "Unknown"
+        return f"{display_name} ({role_label})"

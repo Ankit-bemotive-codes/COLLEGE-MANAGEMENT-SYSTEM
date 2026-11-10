@@ -3,7 +3,7 @@
 
   <nav>
     {% if user.is_authenticated %}
-      {% if user.role == "admin" %}
+      {% if user.is_superuser or user.role == "admin" %}
         <a href="{% url 'dashboard:admin' %}">Dashboard</a>
         <a href="{% url 'academics:department_list' %}">Departments</a>
         <a href="{% url 'exams:exam_list' %}">Exams</a>
